@@ -7,6 +7,7 @@ var restController = require('./controllers/rest-controller');
 mongoose.connect('mongodb://localhost/ninjago');
 mongoose.Promise = global.Promise;
 
+app.use(express.static('public'));
 
 app.set('view engine', 'ejs');
 app.use(express.static('./public'));

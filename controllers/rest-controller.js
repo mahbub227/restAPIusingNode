@@ -2,9 +2,24 @@ var express = require('express');
 var router = express.Router();
 var Ninja = require('../models/ninja');
 
-router.get('/ninjas',function(req, res){
-    res.send({type: 'GET'});
+router.get('/ninjas',function(req, res, next){
+   /*Ninja.find({}).then(function(ninjas){
+       res.send(ninjas);
+   })*/
+   Ninja.aggregate().near(
+       { 
+        geoNear:"Store",
+        near: { 'type': 'Point', 'coordinates': [parseFloat(req.query.lng), parseFloat(req.query.lat)] }, 
+        maxDistance: 100000, 
+        spherical: true, 
+        distanceField: "dis" }).then(function(ninjas){
+        res.send(ninjas);
+    });
+
+    
 });
+
+
 
 router.post('/ninjas',function(req, res, next){
     Ninja.create(req.body).then(function(ninja){
